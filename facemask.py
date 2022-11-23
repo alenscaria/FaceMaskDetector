@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jul 22 15:56:47 2020
-
-@author: Karan
-"""
 
 
 import numpy as np
@@ -11,16 +5,16 @@ import keras
 import keras.backend as k
 from keras.layers import Conv2D,MaxPooling2D,SpatialDropout2D,Flatten,Dropout,Dense
 from keras.models import Sequential,load_model
-from keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 from keras.preprocessing import image
 import cv2
 import datetime
-
+from tensorflow.keras.utils import load_img, img_to_array
 
 # UNCOMMENT THE FOLLOWING CODE TO TRAIN THE CNN FROM SCRATCH
 
 # BUILDING MODEL TO CLASSIFY BETWEEN MASK AND NO MASK
-
+"""
 model=Sequential()
 model.add(Conv2D(32,(3,3),activation='relu',input_shape=(150,150,3)))
 model.add(MaxPooling2D() )
@@ -64,14 +58,15 @@ model_saved=model.fit_generator(
 
 model.save('mymodel.h5',model_saved)
 
+"""
 #To test for individual images
 
 mymodel=load_model('mymodel.h5')
-#test_image=image.load_img('C:/Users/Karan/Desktop/ML Datasets/Face Mask Detection/Dataset/test/without_mask/30.jpg',target_size=(150,150,3))
-test_image=image.load_img(r'C:/Users/karan/Desktop/FaceMaskDetector/test/with_mask/1-with-mask.jpg',
+#test_image=image.load_img('C:/Users/alens/Documents/GitHub/FaceMaskDetector/test/without_mask/30.jpg',target_size=(150,150,3))
+test_image=load_img(r'C:/Users/alens/Documents/GitHub/FaceMaskDetector/test/with_mask/1-with-mask.jpg',
                           target_size=(150,150,3))
 test_image
-test_image=image.img_to_array(test_image)
+test_image=img_to_array(test_image)
 test_image=np.expand_dims(test_image,axis=0)
 mymodel.predict(test_image)[0][0]
 
@@ -89,8 +84,8 @@ while cap.isOpened():
     for(x,y,w,h) in face:
         face_img = img[y:y+h, x:x+w]
         cv2.imwrite('temp.jpg',face_img)
-        test_image=image.load_img('temp.jpg',target_size=(150,150,3))
-        test_image=image.img_to_array(test_image)
+        test_image=load_img('temp.jpg',target_size=(150,150,3))
+        test_image=img_to_array(test_image)
         test_image=np.expand_dims(test_image,axis=0)
         pred=mymodel.predict(test_image)[0][0]
         if pred==1:
